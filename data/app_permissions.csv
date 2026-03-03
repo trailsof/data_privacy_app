@@ -1,0 +1,126 @@
+app_id,category,permission
+com.instagram.android,Identity,add or remove accounts
+com.instagram.android,Identity,find accounts on the device
+com.instagram.android,Identity,read your own contact card
+com.instagram.android,Calendar,add or modify calendar events and send email to guests without owners' knowledge
+com.instagram.android,Contacts,find accounts on the device
+com.instagram.android,Contacts,read your contacts
+com.instagram.android,Location,precise location (GPS and network-based)
+com.instagram.android,Phone,directly call phone numbers
+com.instagram.android,Phone,read call log
+com.instagram.android,Phone,read phone status and identity
+com.instagram.android,Photos/Media/Files,modify or delete the contents of your USB storage
+com.instagram.android,Photos/Media/Files,read the contents of your USB storage
+com.instagram.android,Storage,modify or delete the contents of your USB storage
+com.instagram.android,Storage,read the contents of your USB storage
+com.instagram.android,Camera,take pictures and videos
+com.instagram.android,Microphone,record audio
+com.instagram.android,Wi-Fi connection information,view Wi-Fi connections
+com.instagram.android,Device ID & call information,read phone status and identity
+com.instagram.android,Other,access Bluetooth settings
+com.instagram.android,Other,change network connectivity
+com.instagram.android,Other,change your audio settings
+com.instagram.android,Other,connect and disconnect from Wi-Fi
+com.instagram.android,Other,control vibration
+com.instagram.android,Other,create accounts and set passwords
+com.instagram.android,Other,full network access
+com.instagram.android,Other,install shortcuts
+com.instagram.android,Other,pair with Bluetooth devices
+com.instagram.android,Other,prevent device from sleeping
+com.instagram.android,Other,reorder running apps
+com.instagram.android,Other,run at startup
+com.instagram.android,Other,uninstall shortcuts
+com.instagram.android,Other,use accounts on the device
+com.instagram.android,Other,view network connections
+com.instagram.android,Uncategorized,capture video output
+com.instagram.android,Uncategorized,receive data from Internet
+com.facebook.katana,Device & app history,retrieve running apps
+com.facebook.katana,Identity,add or remove accounts
+com.facebook.katana,Identity,find accounts on the device
+com.facebook.katana,Identity,read your own contact card
+com.facebook.katana,Calendar,add or modify calendar events and send email to guests without owners' knowledge
+com.facebook.katana,Calendar,read calendar events plus confidential information
+com.facebook.katana,Contacts,find accounts on the device
+com.facebook.katana,Contacts,modify your contacts
+com.facebook.katana,Contacts,read your contacts
+com.facebook.katana,Location,approximate location (network-based)
+com.facebook.katana,Location,precise location (GPS and network-based)
+com.facebook.katana,Phone,directly call phone numbers
+com.facebook.katana,Phone,read call log
+com.facebook.katana,Phone,read phone status and identity
+com.facebook.katana,Photos/Media/Files,modify or delete the contents of your USB storage
+com.facebook.katana,Photos/Media/Files,read the contents of your USB storage
+com.facebook.katana,Storage,modify or delete the contents of your USB storage
+com.facebook.katana,Storage,read the contents of your USB storage
+com.facebook.katana,Camera,take pictures and videos
+com.facebook.katana,Microphone,record audio
+com.facebook.katana,Wi-Fi connection information,view Wi-Fi connections
+com.facebook.katana,Device ID & call information,read phone status and identity
+com.facebook.katana,Other,access Bluetooth settings
+com.facebook.katana,Other,change network connectivity
+com.facebook.katana,Other,change your audio settings
+com.facebook.katana,Other,connect and disconnect from Wi-Fi
+com.facebook.katana,Other,control Near Field Communication
+com.facebook.katana,Other,control vibration
+com.facebook.katana,Other,create accounts and set passwords
+com.facebook.katana,Other,draw over other apps
+com.facebook.katana,Other,full network access
+com.facebook.katana,Other,install shortcuts
+com.facebook.katana,Other,pair with Bluetooth devices
+com.facebook.katana,Other,prevent device from sleeping
+com.facebook.katana,Other,read Google service configuration
+com.facebook.katana,Other,read battery statistics
+com.facebook.katana,Other,read sync settings
+com.facebook.katana,Other,reorder running apps
+com.facebook.katana,Other,run at startup
+com.facebook.katana,Other,send sticky broadcast
+com.facebook.katana,Other,toggle sync on and off
+com.facebook.katana,Other,view network connections
+com.facebook.katana,Uncategorized,capture video output
+com.facebook.katana,Uncategorized,download files without notification
+com.facebook.katana,Uncategorized,receive data from Internet
+com.whatsapp,Device & app history,retrieve running apps
+com.whatsapp,Identity,add or remove accounts
+com.whatsapp,Identity,find accounts on the device
+com.whatsapp,Identity,read your own contact card
+com.whatsapp,Contacts,find accounts on the device
+com.whatsapp,Contacts,modify your contacts
+com.whatsapp,Contacts,read your contacts
+com.whatsapp,Location,approximate location (network-based)
+com.whatsapp,Location,precise location (GPS and network-based)
+com.whatsapp,SMS,receive text messages (SMS)
+com.whatsapp,SMS,send SMS messages
+com.whatsapp,Phone,directly call phone numbers
+com.whatsapp,Phone,read call log
+com.whatsapp,Phone,read phone status and identity
+com.whatsapp,Photos/Media/Files,modify or delete the contents of your USB storage
+com.whatsapp,Photos/Media/Files,read the contents of your USB storage
+com.whatsapp,Storage,modify or delete the contents of your USB storage
+com.whatsapp,Storage,read the contents of your USB storage
+com.whatsapp,Camera,take pictures and videos
+com.whatsapp,Microphone,record audio
+com.whatsapp,Wi-Fi connection information,view Wi-Fi connections
+com.whatsapp,Device ID & call information,read phone status and identity
+com.whatsapp,Other,access Bluetooth settings
+com.whatsapp,Other,change network connectivity
+com.whatsapp,Other,change your audio settings
+com.whatsapp,Other,connect and disconnect from Wi-Fi
+com.whatsapp,Other,control Near Field Communication
+com.whatsapp,Other,control vibration
+com.whatsapp,Other,create accounts and set passwords
+com.whatsapp,Other,draw over other apps
+com.whatsapp,Other,full network access
+com.whatsapp,Other,install shortcuts
+com.whatsapp,Other,pair with Bluetooth devices
+com.whatsapp,Other,prevent device from sleeping
+com.whatsapp,Other,read Google service configuration
+com.whatsapp,Other,read sync settings
+com.whatsapp,Other,reorder running apps
+com.whatsapp,Other,run at startup
+com.whatsapp,Other,send sticky broadcast
+com.whatsapp,Other,toggle sync on and off
+com.whatsapp,Other,uninstall shortcuts
+com.whatsapp,Other,use accounts on the device
+com.whatsapp,Other,view network connections
+com.whatsapp,Uncategorized,read sync statistics
+com.whatsapp,Uncategorized,receive data from Internet
