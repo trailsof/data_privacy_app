@@ -2,7 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import re
 import sqlite3
-from google_play_scraper import app as gp_app
+from google_play_scraper import app as gp_app, permissions
 
 apps_to_scrape = {
     "Social Media": ["Instagram", "TikTok", "Snapchat", "Facebook", "X (Twitter)", "Reddit", "Threads", "Pinterest"],
@@ -68,6 +68,11 @@ def resolve_google_play_id(app_name):
 
 def upsert_app(conn, app_data):
     cur = conn.cursor()
+    # check if app already exists
+    existing_app = cur.execute("SELECT id FROM app WHERE google_play_id = ?", (app_data["google_play_id"],)).fetchall()
+    if existing_app:
+        print(f"App already exists: {app_data['name']} ({app_data['google_play_id']}) - Skipping insert.")
+        return
 
     cur.execute("""
     INSERT INTO app (
@@ -102,22 +107,67 @@ def upsert_app(conn, app_data):
 def get_connection(db_path="app_permissions.db"):
     return sqlite3.connect(db_path)
 
+
+def link_app_permissions(conn, google_play_id):
+    url = f"https://reports.exodus-privacy.eu.org/en/reports/{google_play_id}/latest/"
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36"
+    }
+    response = requests.get(url, headers=headers)
+
+    if response.status_code != 200:
+        print(f"Failed to fetch permissions for {google_play_id} from Exodus Privacy: Status code {response.status_code}")
+        return
+    
+    print(f"Fetched permissions page for {google_play_id} from Exodus Privacy.")
+    found_perms = set(re.findall(r'\b[A-Z_]{5,}\b', response.text))
+    print(f"Permissions found for {google_play_id} from Exodus Privacy: {found_perms}")
+    cur = conn.cursor()
+    cur.execute("SELECT id FROM app WHERE google_play_id = ?", (google_play_id,))
+    app_row = cur.fetchone()
+    if not app_row:
+        print(f"No app found with Google Play ID: {google_play_id}")
+        return
+    app_id = app_row[0]
+    for perm in found_perms:
+        print(f"Looking up permission: {perm}")
+        cur.execute("SELECT id FROM permission WHERE android_name = ?", (perm,))
+        perm_row = cur.fetchone()
+        if perm_row:
+            permission_id = perm_row[0]
+            if not permission_id:
+                print(f"Permission ID not found for {perm} in master list.")
+                continue
+            cur.execute("""
+                INSERT OR IGNORE INTO app_permission (app_id, permission_id)
+                VALUES (?, ?)
+            """, (app_id, permission_id))
+        else:
+            print(f"Permission not found in master list: {perm}")
+    conn.commit()
+
+def process_and_link_app(conn, app_name):
+    google_play_id = resolve_google_play_id(app_name)
+
+    if google_play_id:
+        metadata = fetch_google_play_metadata(google_play_id)
+        if metadata:
+            upsert_app(conn, metadata)
+            link_app_permissions(conn, google_play_id)
+            print(f"Inserted/Updated: {metadata['name']} ({metadata['google_play_id']})")
+        else:
+            print(f"Failed to fetch metadata for {app_name}")
+    else:
+        print(f"Could not resolve Google Play ID for {app_name}")
+
 if __name__ == "__main__":
     conn = get_connection()
 
-    for category, apps in apps_to_scrape.items():
-        for app_name in apps:
-            print(f"Processing: {app_name} ({category})")
-            google_play_id = resolve_google_play_id(app_name)
-            if google_play_id:
-                metadata = fetch_google_play_metadata(google_play_id)
-                if metadata:
-                    upsert_app(conn, metadata)
-                    print(f"Inserted/Updated: {metadata['name']} ({metadata['google_play_id']})")
-                else:
-                    print(f"Failed to fetch metadata for {app_name}")
-            else:
-                print(f"Could not resolve Google Play ID for {app_name}")
+    # for category, apps in apps_to_scrape.items():
+    #     for app_name in apps:
+    #         print(f"Processing: {app_name} ({category})")
+    #         process_and_link_app(conn, app_name)
 
+    process_and_link_app(conn, "Instagram")
     conn.close()
     print("Done populating applications.")
