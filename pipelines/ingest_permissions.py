@@ -37,4 +37,35 @@ def seed_master_permissions(db_path='app_permissions.db'):
     print(f"Done! Seeded {len(data)} master permissions.")
     conn.close()
 
-seed_master_permissions()
+def mark_high_severity_permissions(db_path='app_permissions.db'):
+    high_risk_perms = {
+        "ACCESS_FINE_LOCATION": "High",
+        "READ_CONTACTS": "High",
+        "READ_SMS": "High",
+        "RECORD_AUDIO": "High",
+        "READ_CALL_LOG": "High",
+        "READ_PHONE_NUMBERS": "High",
+        "READ_PHONE_STATE": "High",
+        "WRITE_EXTERNAL_STORAGE": "High",
+        "GET_ACCOUNTS": "High",
+        "CALL_PHONE": "High",
+        "ACCESS_MEDIA_LOCATION": "High",
+        "CAMERA": "High",
+    }
+
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+
+    for android_name, severity in high_risk_perms.items():
+        cursor.execute("""
+            UPDATE permission
+            SET severity = ?
+            WHERE android_name = ?
+        """, (severity, android_name))
+
+    conn.commit()
+    print("Marked high severity permissions.")
+    conn.close()
+
+if __name__ == "__main__":
+    mark_high_severity_permissions('app_permissions.db')
