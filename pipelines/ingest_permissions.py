@@ -1,6 +1,28 @@
 import requests
 import sqlite3
 
+# Google defined these permissions as "special". Though they don't fall under a
+# "dangerous" protection level, they should be considered high risk
+SPECIAL_PERMISSIONS = {
+    "SYSTEM_ALERT_WINDOW": "High",
+    "WRITE_SETTINGS": "High",
+}
+
+HIGH_RISK_PERMS = {
+    "ACCESS_FINE_LOCATION": "High",
+    "READ_CONTACTS": "High",
+    "READ_SMS": "High",
+    "RECORD_AUDIO": "High",
+    "READ_CALL_LOG": "High",
+    "READ_PHONE_NUMBERS": "High",
+    "READ_PHONE_STATE": "High",
+    "WRITE_EXTERNAL_STORAGE": "High",
+    "GET_ACCOUNTS": "High",
+    "CALL_PHONE": "High",
+    "ACCESS_MEDIA_LOCATION": "High",
+    "CAMERA": "High",
+}
+
 def seed_permissions(db_path='app_permissions.db'):
     # Fetching the most recent AOSP permission definitions (API 36)
     url = "https://raw.githubusercontent.com/androguard/androguard/refs/heads/master/androguard/core/api_specific_resources/aosp_permissions/permissions_36.json"   
@@ -43,36 +65,31 @@ def seed_permissions(db_path='app_permissions.db'):
     print(f"Done! Seeded {len(data)} master permissions.")
     conn.close()
 
-def mark_high_severity_permissions(db_path='app_permissions.db'):
-    # TODO: This is a manual override and should be used only for system permissions
-    high_risk_perms = {
-        "ACCESS_FINE_LOCATION": "High",
-        "READ_CONTACTS": "High",
-        "READ_SMS": "High",
-        "RECORD_AUDIO": "High",
-        "READ_CALL_LOG": "High",
-        "READ_PHONE_NUMBERS": "High",
-        "READ_PHONE_STATE": "High",
-        "WRITE_EXTERNAL_STORAGE": "High",
-        "GET_ACCOUNTS": "High",
-        "CALL_PHONE": "High",
-        "ACCESS_MEDIA_LOCATION": "High",
-        "CAMERA": "High",
-    }
 
+def override_permission_severity(
+    db_path: str = 'app_permissions.db',
+    overrides: dict = SPECIAL_PERMISSIONS,
+) -> None:
+    """
+    Upserts permission severity overrides. Inserts permissions and their
+    severity if they don't existor updates them if they do.
+    """
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
 
-    for android_name, severity in high_risk_perms.items():
+    for android_name, severity in overrides.items():
         cursor.execute("""
-            UPDATE permission
-            SET severity = ?
-            WHERE android_name = ?
-        """, (severity, android_name))
+            INSERT INTO permission (android_name, severity)
+            VALUES (?, ?)
+            ON CONFLICT(android_name) DO UPDATE SET severity = excluded.severity
+        """, (android_name, severity))
+        print(f'Upserted {android_name} severity to {severity}')
 
     conn.commit()
-    print("Marked high severity permissions.")
     conn.close()
 
 if __name__ == "__main__":
     seed_permissions('app_permissions.db')
+    override_permission_severity(
+        overrides=SPECIAL_PERMISSIONS
+    )
