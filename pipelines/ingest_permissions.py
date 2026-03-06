@@ -8,21 +8,6 @@ SPECIAL_PERMISSIONS = {
     "WRITE_SETTINGS": "High",
 }
 
-HIGH_RISK_PERMS = {
-    "ACCESS_FINE_LOCATION": "High",
-    "READ_CONTACTS": "High",
-    "READ_SMS": "High",
-    "RECORD_AUDIO": "High",
-    "READ_CALL_LOG": "High",
-    "READ_PHONE_NUMBERS": "High",
-    "READ_PHONE_STATE": "High",
-    "WRITE_EXTERNAL_STORAGE": "High",
-    "GET_ACCOUNTS": "High",
-    "CALL_PHONE": "High",
-    "ACCESS_MEDIA_LOCATION": "High",
-    "CAMERA": "High",
-}
-
 def seed_permissions(db_path='app_permissions.db'):
     # Fetching the most recent AOSP permission definitions (API 36)
     url = "https://raw.githubusercontent.com/androguard/androguard/refs/heads/master/androguard/core/api_specific_resources/aosp_permissions/permissions_36.json"   
