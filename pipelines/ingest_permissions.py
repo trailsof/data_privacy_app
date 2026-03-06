@@ -82,16 +82,17 @@ def override_permission_severity(
     for android_name, severity in overrides.items():
         # Check if permission exists
         cursor.execute("""
-            SELECT id FROM permission WHERE android_name = ?
+            SELECT id, severity FROM permission WHERE android_name = ?
         """, (android_name,))
         row = cursor.fetchone()
 
         # If it exists, get its ID and update its severity
         if row:
+            original_severity = row[1]
             cursor.execute("""
                 UPDATE permission SET severity = ? WHERE id = ?
             """, (severity, row[0]))
-            print(f'Updated {android_name} severity to {severity}')
+            print(f'Updated {android_name} severity from {original_severity} to {severity}')
         # Insert if it doesn't exist
         else:
             cursor.execute("""
