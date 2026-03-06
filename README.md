@@ -1,6 +1,11 @@
 # Data Privacy App
 
-A project to gather Android app permissions, seed a permissions database, and provide a simple dashboard to inspect app permission risk and overlap.
+This application shows all the permissions granted to a set of Android mobile apps.
+
+## Database
+<p align="center">
+  <img width="50%" alt="image" src="https://github.com/user-attachments/assets/6b8f2405-446f-4872-8b7c-da8abf8ab4da" />
+</p>
 
 ## Overview
 
@@ -10,6 +15,7 @@ Key capabilities:
 - Fetch app IDs and permissions from Google Play 
 - Seed master Android permission definitions (AOSP) into a local SQLite DB.
 - Serve a dashboard that ranks apps by high-severity permissions and shows permission overlap.
+
 
 ## Repository layout
 
@@ -71,5 +77,3 @@ Open `http://127.0.0.1:5000/dashboard` to view the app ranking and `http://127.0
 - Setup docker, create a Dockerfile and `docker-compose.yaml` to package the app, SQLite DB and templates.
 - Upload app to an EC2 instance
 - Add unit/integration tests around ingestion and the Flask routes
-
-
