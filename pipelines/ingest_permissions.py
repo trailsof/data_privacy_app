@@ -74,7 +74,7 @@ def override_permission_severity(
 ) -> None:
     """
     Upserts permission severity overrides. Inserts permissions and their
-    severity if they don't existor updates them if they do.
+    severity if they don't exist or updates them if they do.
     """
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
@@ -105,6 +105,7 @@ def override_permission_severity(
 
 if __name__ == "__main__":
     seed_permissions('app_permissions.db')
+    print(f"Applying {len(SPECIAL_PERMISSIONS)} permission overrides...")
     override_permission_severity(
         overrides=SPECIAL_PERMISSIONS
     )
