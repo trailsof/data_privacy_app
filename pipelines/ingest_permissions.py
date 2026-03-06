@@ -55,6 +55,8 @@ def seed_permissions(db_path='permission.db'):
         protection_level = group_info.get('protectionLevel', '')
         if 'dangerous' in protection_level:
             severity = 'High'
+        else:
+            severity = 'Normal'
 
         cursor.execute("""
             INSERT OR IGNORE INTO permission (name, category, description, android_name, severity)
