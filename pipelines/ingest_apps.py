@@ -163,11 +163,10 @@ def process_and_link_app(conn, app_name):
 if __name__ == "__main__":
     conn = get_connection()
 
-    # for category, apps in apps_to_scrape.items():
-    #     for app_name in apps:
-    #         print(f"Processing: {app_name} ({category})")
-    #         process_and_link_app(conn, app_name)
+    for category, apps in apps_to_scrape.items():
+        for app_name in apps:
+            print(f"Processing: {app_name} ({category})")
+            process_and_link_app(conn, app_name)
 
-    process_and_link_app(conn, "Instagram")
     conn.close()
     print("Done populating applications.")

@@ -1,8 +1,6 @@
 import pytest
 from pipelines.ingest_apps import fetch_google_play_metadata, resolve_google_play_id
-# what do we want to test???
 
-# test_{function_name}_{behavior}
 @pytest.mark.integration
 def test_fetch_google_play_metadata_succeeds_for_valid_app_id():
     # test with a known app id

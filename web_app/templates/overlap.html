@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Permission Overlap</title>
+    <style>
+        body { font-family: sans-serif; background: #0f0f0f; color: white; padding: 20px; }
+        table { border-collapse: collapse; margin: 0 auto; background: #1a1a1a; }
+        th, td { padding: 12px; border: 1px solid #333; text-align: center; }
+        
+        .perm-label { text-align: right; font-weight: bold; color: #bbb; background: #1a1a1a; min-width: 250px; }
+        
+        /* The Vertical Text Trick */
+        .app-header { 
+            writing-mode: vertical-rl; 
+            transform: rotate(180deg); 
+            padding: 20px 10px; 
+            background: #222; 
+            color: #bb86fc;
+            height: 150px;
+        }
+        
+        .check { background: #ff4d4d; color: white; font-weight: bold; }
+        .empty { color: #444; }
+        .back { color: #03dac6; text-decoration: none; display: block; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+    <a href="/" class="back">← Back to Home</a>
+    <h1 style="text-align:center;">High-Risk Permissions for Top 5 Apps in 2025</h1>
+    
+    <table>
+        <thead>
+            <tr>
+                <th></th> {% for app in apps %}
+                    <th class="app-header">{{ app.name }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for p in perms %}
+            <tr>
+                <td class="perm-label">{{ p.android_name }}</td>
+                {% for app in apps %}
+                    {# Check if the "App|Permission" string exists in our ownership set #}
+                    {% set lookup = app.google_play_id ~ '|' ~ p.android_name %}
+                    {% if lookup in ownership %}
+                        <td class="check">YES</td>
+                    {% else %}
+                        <td class="empty">-</td>
+                    {% endif %}
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

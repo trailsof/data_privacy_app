@@ -1,7 +1,7 @@
 import requests
 import sqlite3
 
-def seed_master_permissions(db_path='app_permissions.db'):
+def seed_permissions(db_path='app_permissions.db'):
     # Fetching the most recent AOSP permission definitions (API 36)
     url = "https://raw.githubusercontent.com/androguard/androguard/refs/heads/master/androguard/core/api_specific_resources/aosp_permissions/permissions_36.json"   
     
@@ -26,18 +26,25 @@ def seed_master_permissions(db_path='app_permissions.db'):
         
         group_uri = info.get('permissionGroup', '')
         group_info = groups.get(group_uri, {})
+
         category = group_info.get('label', '').upper() if group_info else 'OTHER'
-        
+
+        severity = None
+        protection_level = group_info.get('protectionLevel', '')
+        if 'dangerous' in protection_level:
+            severity = 'High'
+
         cursor.execute("""
-            INSERT OR IGNORE INTO permission (name, category, description, android_name)
-            VALUES (?, ?, ?, ?)
-        """, (clean_name, category, description, android_name))
+            INSERT OR IGNORE INTO permission (name, category, description, android_name, severity)
+            VALUES (?, ?, ?, ?, ?)
+        """, (clean_name, category, description, android_name, severity))
 
     conn.commit()
     print(f"Done! Seeded {len(data)} master permissions.")
     conn.close()
 
 def mark_high_severity_permissions(db_path='app_permissions.db'):
+    # TODO: This is a manual override and should be used only for system permissions
     high_risk_perms = {
         "ACCESS_FINE_LOCATION": "High",
         "READ_CONTACTS": "High",
@@ -68,4 +75,4 @@ def mark_high_severity_permissions(db_path='app_permissions.db'):
     conn.close()
 
 if __name__ == "__main__":
-    mark_high_severity_permissions('app_permissions.db')
+    seed_permissions('app_permissions.db')
