@@ -11,6 +11,9 @@ This application shows all the permissions granted to a set of Android mobile ap
 
 This repository collects Android app permission data (from Google Play Scraper and AOSP definitions), seeds a normalized SQLite permissions database, and runs a lightweight Flask dashboard to inspect apps and high-risk permission overlaps.
 
+<img width="970" height="518" alt="image" src="https://github.com/user-attachments/assets/0342bfec-6685-435a-a2a6-b0277fd68d60" />
+
+
 Key capabilities:
 - Fetch app IDs and permissions from Google Play 
 - Seed master Android permission definitions (AOSP) into a local SQLite DB.
