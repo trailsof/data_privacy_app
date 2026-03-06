@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Privacy Lab: Home</title>
+    <style>
+        body { 
+            font-family: sans-serif; 
+            background: #121212; 
+            color: white; 
+            padding: 50px; 
+            text-align: center; 
+        }
+        .nav-card { 
+            display: inline-block; 
+            background: #1e1e1e; 
+            padding: 30px; 
+            margin: 20px; 
+            border-radius: 15px; 
+            border: 1px solid #333; 
+            transition: 0.3s; 
+            width: 250px; 
+            text-decoration: none; 
+            color: white; 
+            vertical-align: top;
+        }
+        .nav-card:hover { 
+            border-color: #bb86fc; 
+            background: #252525; 
+            transform: translateY(-5px); 
+        }
+        h2 { color: #bb86fc; margin-top: 0; }
+        p { color: #bbb; line-height: 1.5; }
+    </style>
+</head>
+<body>
+    <h1>🛡️ Privacy Lab: Localhost</h1>
+    <p>Select a view to analyze Android application risks.</p>
+    
+    <div class="nav-container">
+        <a href="/dashboard" class="nav-card">
+            <h2>App List</h2>
+            <p>Total counts and severity bars for all analyzed apps.</p>
+        </a>
+        
+        <a href="/overlap" class="nav-card">
+            <h2>Overlap Matrix</h2>
+            <p>Comparison of High-Risk permissions for the Top 5 apps.</p>
+        </a>
+    </div>
+</body>
+</html>
