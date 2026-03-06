@@ -23,7 +23,7 @@ HIGH_RISK_PERMS = {
     "CAMERA": "High",
 }
 
-def seed_permissions(db_path='permission.db'):
+def seed_permissions(db_path='app_permission.db'):
     # Fetching the most recent AOSP permission definitions (API 36)
     url = "https://raw.githubusercontent.com/androguard/androguard/refs/heads/master/androguard/core/api_specific_resources/aosp_permissions/permissions_36.json"   
     
@@ -69,7 +69,7 @@ def seed_permissions(db_path='permission.db'):
 
 
 def override_permission_severity(
-    db_path: str = 'permission.db',
+    db_path: str = 'app_permission.db',
     overrides: dict = SPECIAL_PERMISSIONS,
 ) -> None:
     """
@@ -91,7 +91,7 @@ def override_permission_severity(
     conn.close()
 
 if __name__ == "__main__":
-    seed_permissions('permission.db')
+    seed_permissions('app_permission.db')
     override_permission_severity(
         overrides=SPECIAL_PERMISSIONS
     )
