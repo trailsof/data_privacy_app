@@ -73,6 +73,4 @@ def mark_high_severity_permissions(db_path='app_permissions.db'):
     conn.commit()
     print("Marked high severity permissions.")
     conn.close()
-
-if __name__ == "__main__":
-    seed_permissions('app_permissions.db')
+    
