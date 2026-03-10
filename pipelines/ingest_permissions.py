@@ -32,45 +32,45 @@ def seed_permissions(
     groups = data.get('groups', {})
     perms = data.get('permissions', {})
 
-    conn = sqlite3.connect(db_path)
-    cursor = conn.cursor()
+    with sqlite3.connect(db_path) as conn:
+        cursor = conn.cursor()
 
-    seed_count = 0
-    for full_uri, info in perms.items():
-        # Get clean name from android name
-        # Example: 'android.permission.CAMERA' -> 'CAMERA' -> 'Camera'
-        android_name = full_uri.split('.')[-1]
-        clean_name = android_name.replace('_', ' ').title()
+        seed_count = 0
+        for full_uri, info in perms.items():
+            # Get clean name from android name
+            # Example: 'android.permission.CAMERA' -> 'CAMERA' -> 'Camera'
+            android_name = full_uri.split('.')[-1]
+            clean_name = android_name.replace('_', ' ').title()
 
-        # Get permission description
-        description = info.get('description', clean_name)
+            # Get permission description
+            description = info.get('description', clean_name)
 
-        # Get permission group category
-        group_uri = info.get('permissionGroup', '')
-        group_info = groups.get(group_uri, {})
-        category = group_info.get('label', '').upper() if group_info else 'OTHER'
-        
-        # Get severity from protection level
-        severity = None
-        protection_level = info.get('protectionLevel', '')
-        if 'dangerous' in protection_level:
-            severity = 'High'
-        else:
-            severity = 'Normal'
+            # Get permission group category
+            group_uri = info.get('permissionGroup', '')
+            group_info = groups.get(group_uri, {})
+            category = group_info.get('label', '').upper() if group_info else 'OTHER'
+            
+            # Get severity from protection level
+            severity = None
+            protection_level = info.get('protectionLevel', '')
+            if 'dangerous' in protection_level:
+                severity = 'High'
+            else:
+                severity = 'Normal'
 
-        # Upsert into permission DB
-        cursor.execute("""
-            INSERT OR IGNORE INTO permission (name, category, description, android_name, severity)
-            VALUES (?, ?, ?, ?, ?)
-        """, (clean_name, category, description, android_name, severity))
-        
-        # Count successful insertion
-        if cursor.rowcount > 0:
-            seed_count += 1
+            # Upsert into permission DB
+            cursor.execute("""
+                INSERT OR IGNORE INTO permission (name, category, description, android_name, severity)
+                VALUES (?, ?, ?, ?, ?)
+            """, (clean_name, category, description, android_name, severity))
+            
+            # Count successful insertion
+            if cursor.rowcount > 0:
+                seed_count += 1
     
-    conn.commit()
+        conn.commit()
+        
     print(f"Done! Seeded {seed_count} master permissions.")
-    conn.close()
 
 
 def override_permission_severity(
