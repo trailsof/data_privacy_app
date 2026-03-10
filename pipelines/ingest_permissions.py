@@ -87,10 +87,4 @@ def override_permission_severity(
 
     conn.commit()
     conn.close()
-
-if __name__ == "__main__":
-    seed_permissions('app_permissions.db')
-    print(f"Applying {len(SPECIAL_PERMISSIONS)} permission overrides...")
-    override_permission_severity(
-        overrides=SPECIAL_PERMISSIONS
-    )
+    

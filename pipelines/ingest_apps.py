@@ -160,7 +160,7 @@ def process_and_link_app(conn, app_name):
     else:
         print(f"Could not resolve Google Play ID for {app_name}")
 
-if __name__ == "__main__":
+def seed_apps():
     conn = get_connection()
 
     for category, apps in apps_to_scrape.items():
