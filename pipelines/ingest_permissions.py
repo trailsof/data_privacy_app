@@ -15,20 +15,23 @@ AOSP_PERMS_JSON_URL = (
     "aosp_permissions/permissions_36.json"
 )
 
-def seed_permissions(
-    db_path: str = 'app_permissions.db',
-    url: str = AOSP_PERMS_JSON_URL
-) -> None:
+def fetch_permissions_from_url(url: str = AOSP_PERMS_JSON_URL) -> dict:
     """
-    Fetch and population permissions database with existing AOSP permissions (API 36),
-    defined by androguard (used by Exodus).
+    Fetch AOSP permissions from a URL. By default, fetch existing
+    AOSP permissions (API 36) defined by androguard (used by Exodus).
     """
     try:
-        data = requests.get(url).json()
+        return requests.get(url).json()
     except Exception as e:
-        print(f"Error fetching permissions: {e}")
-        return
+        raise RuntimeError(f"Error fetching permissions: {e}")
 
+def seed_permissions(
+    data: dict,
+    db_path: str = 'app_permissions.db'
+) -> None:
+    """
+    Populate permissions database with AOSP permissions.
+    """
     groups = data.get('groups', {})
     perms = data.get('permissions', {})
 
@@ -109,7 +112,8 @@ def override_permission_severity(
 
 if __name__ == "__main__":
     # Populate permission DB
-    seed_permissions('app_permissions.db')
+    data = fetch_permissions_from_url()
+    seed_permissions(data)
 
     # Override with special permissions
     print(f"Applying {len(SPECIAL_PERMISSIONS)} permission overrides...")
