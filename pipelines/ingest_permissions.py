@@ -35,6 +35,7 @@ def seed_permissions(
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
 
+    seed_count = 0
     for full_uri, info in perms.items():
         # Get clean name from android name
         # Example: 'android.permission.CAMERA' -> 'CAMERA' -> 'Camera'
@@ -62,9 +63,13 @@ def seed_permissions(
             INSERT OR IGNORE INTO permission (name, category, description, android_name, severity)
             VALUES (?, ?, ?, ?, ?)
         """, (clean_name, category, description, android_name, severity))
-
+        
+        # Count successful insertion
+        if cursor.rowcount > 0:
+            seed_count += 1
+    
     conn.commit()
-    print(f"Done! Seeded {len(data)} master permissions.")
+    print(f"Done! Seeded {seed_count} master permissions.")
     conn.close()
 
 
