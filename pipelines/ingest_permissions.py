@@ -51,7 +51,6 @@ def seed_permissions(
             category = group_info.get('label', '').upper() if group_info else 'OTHER'
             
             # Get severity from protection level
-            severity = None
             protection_level = info.get('protectionLevel', '')
             if 'dangerous' in protection_level:
                 severity = 'High'
@@ -69,7 +68,7 @@ def seed_permissions(
                 seed_count += 1
     
         conn.commit()
-        
+
     print(f"Done! Seeded {seed_count} master permissions.")
 
 
