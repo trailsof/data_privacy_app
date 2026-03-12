@@ -63,11 +63,11 @@ def test_override_permission_severity_insert(tmp_path, mock_aosp_data, mock_over
     override_permission_severity(db_path=TMP_DB_PATH, overrides=mock_override)
     with sqlite3.connect(TMP_DB_PATH) as conn:
         cursor = conn.cursor()
-        cursor.execute("""SELECT android_name, severity FROM permission""")
+        cursor.execute("""SELECT name, severity FROM permission""")
         row = cursor.fetchone()
     
-    assert row[0] == "MOCK_PERMISSION"
-    assert row[0] == "High"
+    assert row[0] == "Mock Permission"
+    assert row[1] == "High"
 
 @pytest.mark.integration
 def test_override_permission_severity_update(tmp_path, mock_aosp_data, mock_override):
