@@ -9,11 +9,15 @@ SPECIAL_PERMISSIONS = {
     "WRITE_SETTINGS": "High",
 }
 
-AOSP_PERMS_JSON_URL = (
-    "https://raw.githubusercontent.com/androguard/androguard/"
-    "refs/heads/master/androguard/core/api_specific_resources/"
-    "aosp_permissions/permissions_36.json"
-)
+def seed_permissions(db_path='data_privacy_app.db'):
+    # Fetching the most recent AOSP permission definitions (API 36)
+    url = "https://raw.githubusercontent.com/androguard/androguard/refs/heads/master/androguard/core/api_specific_resources/aosp_permissions/permissions_36.json"   
+    
+    try:
+        data = requests.get(url).json()
+    except Exception as e:
+        print(f"Error fetching permissions: {e}")
+        return
 
 def fetch_permissions_from_url(url: str = AOSP_PERMS_JSON_URL) -> dict:
     """
@@ -76,7 +80,7 @@ def seed_permissions(
 
 
 def override_permission_severity(
-    db_path: str = 'app_permissions.db',
+    db_path: str = 'data_privacy_app.db',
     overrides: dict = SPECIAL_PERMISSIONS,
 ) -> None:
     """
