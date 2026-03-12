@@ -55,7 +55,9 @@ def seed_permissions(
             
             # Get severity from protection level
             protection_level = info.get('protectionLevel', '')
-            if 'dangerous' in protection_level:
+            if protection_level == '':
+                severity = None
+            elif 'dangerous' in protection_level:
                 severity = 'High'
             else:
                 severity = 'Normal'
