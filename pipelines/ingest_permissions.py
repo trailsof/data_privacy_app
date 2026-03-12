@@ -26,12 +26,15 @@ def fetch_permissions_from_url(url: str = AOSP_PERMS_JSON_URL) -> dict:
         raise RuntimeError(f"Error fetching permissions: {e}")
 
 def seed_permissions(
-    data: dict,
-    db_path: str = 'data_privacy_app.db'
+    data: dict | None = None,
+    db_path: str = 'data_privacy_app.db',
 ) -> None:
     """
     Populate permissions database with AOSP permissions.
     """
+    if data is None:
+        data = fetch_permissions_from_url()
+    
     groups = data.get('groups', {})
     perms = data.get('permissions', {})
 
