@@ -5,8 +5,8 @@ import requests
 # Google defined these permissions as "special". Though they don't fall under a
 # "dangerous" protection level, they should be considered high risk
 SPECIAL_PERMISSIONS = {
-    "SYSTEM_ALERT_WINDOW": "High",
-    "WRITE_SETTINGS": "High",
+    "System Alert Window": "High",
+    "Write Settings": "High",
 }
 
 AOSP_PERMS_JSON_URL = (
@@ -27,7 +27,7 @@ def fetch_permissions_from_url(url: str = AOSP_PERMS_JSON_URL) -> dict:
 
 def seed_permissions(
     data: dict,
-    db_path: str = 'app_permissions.db'
+    db_path: str = 'data_privacy_app.db'
 ) -> None:
     """
     Populate permissions database with AOSP permissions.
@@ -86,26 +86,29 @@ def override_permission_severity(
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
 
-    for android_name, severity in overrides.items():
+    for name, severity in overrides.items():
         # Check if permission exists
         cursor.execute("""
-            SELECT id, severity FROM permission WHERE android_name = ?
-        """, (android_name,))
+            SELECT id, severity FROM permission WHERE name = ?
+        """, (name,))
         row = cursor.fetchone()
 
         # If it exists, get its ID and update its severity
         if row:
             original_severity = row[1]
-            cursor.execute("""
-                UPDATE permission SET severity = ? WHERE id = ?
-            """, (severity, row[0]))
-            print(f'Updated {android_name} severity from {original_severity} to {severity}')
+            if original_severity != severity:
+                cursor.execute("""
+                    UPDATE permission SET severity = ? WHERE id = ?
+                """, (severity, row[0]))
+                print(f"Updated '{name}' severity from '{original_severity}' to '{severity}'")
+            else:
+                continue
         # Insert if it doesn't exist
         else:
             cursor.execute("""
-                INSERT INTO permission (android_name, severity) VALUES (?, ?)
-            """, (android_name, severity))
-            print(f'Inserted {android_name} with severity {severity}')
+                INSERT INTO permission (name, severity) VALUES (?, ?)
+            """, (name, severity))
+            print(f"Inserted '{name}' with severity '{severity}'")
 
     conn.commit()
     conn.close()
