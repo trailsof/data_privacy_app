@@ -104,7 +104,7 @@ def upsert_app(conn, app_data):
 
     conn.commit()
 
-def get_connection(db_path="app_permissions.db"):
+def get_connection(db_path="data_privacy_app.db"):
     return sqlite3.connect(db_path)
 
 

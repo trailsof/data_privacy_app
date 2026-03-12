@@ -6,7 +6,7 @@ from pipelines.ingest_permissions import seed_permissions
 from pipelines.ingest_apps import seed_apps
 
 app = Flask(__name__)
-DB_PATH = "app_permissions.db" 
+DB_PATH = "data_privacy_app.db" 
 
 def register_commands(app):
     @app.cli.command("seed")

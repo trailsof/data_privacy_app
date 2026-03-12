@@ -8,7 +8,7 @@ SPECIAL_PERMISSIONS = {
     "WRITE_SETTINGS": "High",
 }
 
-def seed_permissions(db_path='app_permissions.db'):
+def seed_permissions(db_path='data_privacy_app.db'):
     # Fetching the most recent AOSP permission definitions (API 36)
     url = "https://raw.githubusercontent.com/androguard/androguard/refs/heads/master/androguard/core/api_specific_resources/aosp_permissions/permissions_36.json"   
     
@@ -54,7 +54,7 @@ def seed_permissions(db_path='app_permissions.db'):
 
 
 def override_permission_severity(
-    db_path: str = 'app_permissions.db',
+    db_path: str = 'data_privacy_app.db',
     overrides: dict = SPECIAL_PERMISSIONS,
 ) -> None:
     """

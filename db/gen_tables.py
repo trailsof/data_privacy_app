@@ -1,8 +1,8 @@
 import sqlite3
 
-DB_PATH = "app_permissions.db"
+DB_PATH = "data_privacy_app.db"
 
-app_table = """
+data_privacy_app_table = """
 CREATE TABLE IF NOT EXISTS app (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     google_play_id TEXT UNIQUE NOT NULL, 
@@ -59,7 +59,7 @@ def create_tables():
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 
-    cursor.execute(app_table)
+    cursor.execute(data_privacy_app_table)
     cursor.execute(permission_table)
     cursor.execute(app_permission_table)
     cursor.execute(session_table)
