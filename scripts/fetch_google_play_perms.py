@@ -46,5 +46,5 @@ if __name__ == "__main__":
     ]   
     print(f"App IDs: {app_ids}")
     permissions_data = get_permissions(app_ids)
-    permissions_data.to_csv('app_permissions.csv', index=False)
-    print("Permissions data saved to app_permissions.csv")
+    permissions_data.to_csv('google_play_permissions.csv', index=False)
+    print("Permissions data saved to google_play_permissions.csv")
