@@ -25,10 +25,10 @@ Key capabilities:
 - `data_privacy_app/`
   - `db/gen_tables.py` — creates the SQLite schema (`app`, `permission`, `app_permission`, `session`, `session_app`).
   - `pipelines/ingest_permissions.py` — downloads AOSP permission metadata and seeds `permission` table; provides a manual high-severity override.
-  - `scripts/fetch_google_play_perms.py` — example script using `google_play_scraper` to resolve app IDs and fetch permissions (saves `app_permissions.csv`).
+  - `scripts/fetch_google_play_perms.py` — example script using `google_play_scraper` to resolve app IDs and fetch permissions (saves `google_play_permissions.csv`).
   - `web_app/common_app_dashboard.py` — Flask app serving the dashboard and overlap pages using templates in `web_app/templates/`.
   - `web_app/templates/` — HTML templates for the dashboard and overlap views.
-  - `data/` — place for CSVs and other ingest artifacts (e.g., `app_permissions.csv`).
+  - `data/` — place for CSVs and other ingest artifacts (e.g., `google_play_permissions.csv`).
 
 Other top-level folders in the workspace include ingestion helpers, tests, and notebooks for exploration.
 
@@ -50,7 +50,7 @@ pip install flask requests pandas google-play-scraper
 python db/gen_tables.py
 ```
 
-This creates `app_permissions.db` (in the working directory) and the schema used by the app and pipelines.
+This creates `data_privacy_app.db` (in the working directory) and the schema used by the app and pipelines.
 
 ## Seeding master permissions
 
