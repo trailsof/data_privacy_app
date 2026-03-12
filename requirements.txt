@@ -1,0 +1,6 @@
+flask
+click
+requests
+pandas
+google-play-scraper
+beautifulsoup4

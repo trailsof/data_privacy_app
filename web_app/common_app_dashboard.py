@@ -1,8 +1,30 @@
-from flask import Flask, render_template, render_template_string
+from flask import Flask, render_template
+import click
+from flask.cli import with_appcontext
 import sqlite3
+from pipelines.ingest_permissions import seed_permissions
+from pipelines.ingest_apps import seed_apps
 
 app = Flask(__name__)
 DB_PATH = "app_permissions.db" 
+
+def register_commands(app):
+    @app.cli.command("seed")
+    @with_appcontext
+    def seed():
+        """Command to populate the database: perms then apps."""
+        click.echo("🌱 Starting database seed...")
+        
+        click.echo("Step 1: Ingesting Permissions...")
+        seed_permissions() 
+        
+        click.echo("Step 2: Ingesting Apps & Linking Permissions...")
+        seed_apps()
+        
+        click.echo("✅ Seed complete!")
+
+# Call it immediately after app definition
+register_commands(app)
 
 def get_data(query, params=()):
     """Standard helper to handle DB connections safely."""
@@ -55,6 +77,3 @@ def overlap():
 
     ownership = {f"{link['google_play_id']}|{link['android_name']}" for link in links}
     return render_template('overlap.html', perms=perms_rows, apps=apps, ownership=ownership)
-
-if __name__ == '__main__':
-    app.run(debug=True, port=5000)
