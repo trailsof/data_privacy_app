@@ -100,13 +100,13 @@ def override_permission_severity(
         # If it exists, get its ID and update its severity
         if row:
             original_severity = row[1]
-            if original_severity != severity:
-                cursor.execute("""
-                    UPDATE permission SET severity = ? WHERE id = ?
-                """, (severity, row[0]))
-                print(f"Updated '{name}' severity from '{original_severity}' to '{severity}'")
-            else:
+            if original_severity == severity:
+                print(f"Permission '{name}' with severity '{severity}' already exists. Skipping")
                 continue
+            cursor.execute("""
+                UPDATE permission SET severity = ? WHERE id = ?
+            """, (severity, row[0]))
+            print(f"Updated '{name}' severity from '{original_severity}' to '{severity}'")
         # Raise warning if it doesn't exist
         else:
             print(f"Warning: Permission '{name}' not found in database. Skipping.")
