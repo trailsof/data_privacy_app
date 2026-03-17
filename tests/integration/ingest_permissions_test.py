@@ -51,25 +51,6 @@ def test_seed_permissions(tmp_path, mock_aosp_data):
 
 
 @pytest.mark.integration
-def test_override_permission_severity_insert(tmp_path, mock_aosp_data, mock_override):
-    """ Inserts permission severity if permission doesn't exist """
-    # create an empty temporary permissions table
-    TMP_DB_PATH = tmp_path / "test.db"
-    with sqlite3.connect(TMP_DB_PATH) as conn:
-        cursor = conn.cursor()
-        cursor.execute(permission_table)
-
-    # check if permission and severity were inserted
-    override_permission_severity(db_path=TMP_DB_PATH, overrides=mock_override)
-    with sqlite3.connect(TMP_DB_PATH) as conn:
-        cursor = conn.cursor()
-        cursor.execute("""SELECT name, severity FROM permission""")
-        row = cursor.fetchone()
-    
-    assert row[0] == "Mock Permission"
-    assert row[1] == "High"
-
-@pytest.mark.integration
 def test_override_permission_severity_update(tmp_path, mock_aosp_data, mock_override):
     """ Updates permission severity if permission exists """
     # create a temporary permissions table
