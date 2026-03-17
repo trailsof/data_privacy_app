@@ -85,8 +85,7 @@ def override_permission_severity(
     overrides: dict = SPECIAL_PERMISSIONS,
 ) -> None:
     """
-    Upserts permission severity overrides. Inserts permissions and their
-    severity if they don't exist or updates them if they do.
+    Overrides existing permission's severity.
     """
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
@@ -108,12 +107,10 @@ def override_permission_severity(
                 print(f"Updated '{name}' severity from '{original_severity}' to '{severity}'")
             else:
                 continue
-        # Insert if it doesn't exist
+        # Raise warning if it doesn't exist
         else:
-            cursor.execute("""
-                INSERT INTO permission (name, severity) VALUES (?, ?)
-            """, (name, severity))
-            print(f"Inserted '{name}' with severity '{severity}'")
+            print(f"Warning: Permission '{name}' not found in database. Skipping.")
+            continue
 
     conn.commit()
     conn.close()
