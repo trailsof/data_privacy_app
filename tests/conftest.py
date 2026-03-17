@@ -30,5 +30,5 @@ def mock_aosp_data():
 @pytest.fixture
 def mock_override():
     return {
-        "Mock Permission": "High"
+        "MOCK_PERMISSION": "High"
     }
