@@ -97,8 +97,10 @@ def override_permission_severity(
         """, (android_name,))
         row = cursor.fetchone()
 
-        # If it exists, get its ID and update its severity
-        if row:
+        if not row:
+            print(f"Warning: Permission '{android_name}' not found in database. Skipping.")
+            continue
+        else:
             original_severity = row[1]
             if original_severity == severity:
                 print(f"Permission '{android_name}' with severity '{severity}' already exists. Skipping")
@@ -107,10 +109,6 @@ def override_permission_severity(
                 UPDATE permission SET severity = ? WHERE id = ?
             """, (severity, row[0]))
             print(f"Updated '{android_name}' severity from '{original_severity}' to '{severity}'")
-        # Raise warning if it doesn't exist
-        else:
-            print(f"Warning: Permission '{android_name}' not found in database. Skipping.")
-            continue
 
     conn.commit()
     conn.close()
