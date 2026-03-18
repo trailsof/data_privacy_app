@@ -1,0 +1,6 @@
+[tool.pytest.ini_options]
+pythonpath = ["."]
+markers = [
+    "integration: marks tests as integration tests (real network/db calls)",
+    "unit: marks tests as unit tests",
+]

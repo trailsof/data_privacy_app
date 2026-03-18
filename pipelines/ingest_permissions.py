@@ -1,5 +1,6 @@
-import requests
 import sqlite3
+
+import requests
 
 # Google defined these permissions as "special". Though they don't fall under a
 # "dangerous" protection level, they should be considered high risk
@@ -8,49 +9,75 @@ SPECIAL_PERMISSIONS = {
     "WRITE_SETTINGS": "High",
 }
 
-def seed_permissions(db_path='data_privacy_app.db'):
-    # Fetching the most recent AOSP permission definitions (API 36)
-    url = "https://raw.githubusercontent.com/androguard/androguard/refs/heads/master/androguard/core/api_specific_resources/aosp_permissions/permissions_36.json"   
-    
-    try:
-        data = requests.get(url).json()
-    except Exception as e:
-        print(f"Error fetching permissions: {e}")
-        return
+AOSP_PERMS_JSON_URL = (
+    "https://raw.githubusercontent.com/androguard/androguard/"
+    "refs/heads/master/androguard/core/api_specific_resources/"
+    "aosp_permissions/permissions_36.json"
+)
 
+def fetch_permissions_from_url(url: str = AOSP_PERMS_JSON_URL) -> dict:
+    """
+    Fetch AOSP permissions from a URL. By default, fetch existing
+    AOSP permissions (API 36) defined by androguard (used by Exodus).
+    """
+    try:
+        return requests.get(url).json()
+    except Exception as e:
+        raise RuntimeError(f"Error fetching permissions: {e}")
+
+def seed_permissions(
+    data: dict | None = None,
+    db_path: str = 'data_privacy_app.db',
+) -> None:
+    """
+    Populate permissions database with AOSP permissions.
+    """
+    if data is None:
+        data = fetch_permissions_from_url()
+    
     groups = data.get('groups', {})
     perms = data.get('permissions', {})
 
-    conn = sqlite3.connect(db_path)
-    cursor = conn.cursor()
+    with sqlite3.connect(db_path) as conn:
+        cursor = conn.cursor()
 
-    for full_uri, info in perms.items():
-        # Example: 'android.permission.CAMERA' -> 'CAMERA'
-        android_name = full_uri.split('.')[-1]
-        clean_name = android_name.replace('_', ' ').title()  # 'CAMERA' -> 'Camera'
+        seed_count = 0
+        for full_uri, info in perms.items():
+            # Get clean name from android name
+            # Example: 'android.permission.CAMERA' -> 'CAMERA' -> 'Camera'
+            android_name = full_uri.split('.')[-1]
+            clean_name = android_name.replace('_', ' ').title()
 
-        description = info.get('description', clean_name)
-        
-        group_uri = info.get('permissionGroup', '')
-        group_info = groups.get(group_uri, {})
+            # Get permission description
+            description = info.get('description', clean_name)
 
-        category = group_info.get('label', '').upper() if group_info else 'OTHER'
+            # Get permission group category
+            group_uri = info.get('permissionGroup', '')
+            group_info = groups.get(group_uri, {})
+            category = group_info.get('label', '').upper() if group_info else 'OTHER'
+            
+            # Get severity from protection level
+            protection_level = info.get('protectionLevel', '')
+            if protection_level == '':
+                severity = 'Unknown'
+            elif 'dangerous' in protection_level:
+                severity = 'High'
+            else:
+                severity = 'Normal'
 
-        severity = None
-        protection_level = group_info.get('protectionLevel', '')
-        if 'dangerous' in protection_level:
-            severity = 'High'
-        else:
-            severity = 'Normal'
+            # Upsert into permission DB
+            cursor.execute("""
+                INSERT OR IGNORE INTO permission (name, category, description, android_name, severity)
+                VALUES (?, ?, ?, ?, ?)
+            """, (clean_name, category, description, android_name, severity))
+            
+            # Count successful insertion
+            if cursor.rowcount > 0:
+                seed_count += 1
+    
+        conn.commit()
 
-        cursor.execute("""
-            INSERT OR IGNORE INTO permission (name, category, description, android_name, severity)
-            VALUES (?, ?, ?, ?, ?)
-        """, (clean_name, category, description, android_name, severity))
-
-    conn.commit()
-    print(f"Done! Seeded {len(data)} master permissions.")
-    conn.close()
+    print(f"Done! Seeded {seed_count} master permissions.")
 
 
 def override_permission_severity(
@@ -58,8 +85,7 @@ def override_permission_severity(
     overrides: dict = SPECIAL_PERMISSIONS,
 ) -> None:
     """
-    Upserts permission severity overrides. Inserts permissions and their
-    severity if they don't exist or updates them if they do.
+    Overrides existing permission's severity.
     """
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
@@ -71,19 +97,18 @@ def override_permission_severity(
         """, (android_name,))
         row = cursor.fetchone()
 
-        # If it exists, get its ID and update its severity
-        if row:
+        if not row:
+            print(f"Warning: Permission '{android_name}' not found in database. Skipping.")
+            continue
+        else:
             original_severity = row[1]
+            if original_severity == severity:
+                print(f"Permission '{android_name}' with severity '{severity}' already exists. Skipping")
+                continue
             cursor.execute("""
                 UPDATE permission SET severity = ? WHERE id = ?
             """, (severity, row[0]))
-            print(f'Updated {android_name} severity from {original_severity} to {severity}')
-        # Insert if it doesn't exist
-        else:
-            cursor.execute("""
-                INSERT INTO permission (android_name, severity) VALUES (?, ?)
-            """, (android_name, severity))
-            print(f'Inserted {android_name} with severity {severity}')
+            print(f"Updated '{android_name}' severity from '{original_severity}' to '{severity}'")
 
     conn.commit()
     conn.close()
