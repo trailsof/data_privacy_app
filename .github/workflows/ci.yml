@@ -20,6 +20,9 @@ jobs:
       
       - name: Ruff check
         run: ruff check .
+      
+      - name: Ruff format
+        run: ruff format --check .
 
   test:
     name: Tests (pytest)
