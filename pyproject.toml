@@ -4,3 +4,9 @@ markers = [
     "integration: marks tests as integration tests (real network/db calls)",
     "unit: marks tests as unit tests",
 ]
+
+[tool.ruff]
+exclude = [
+    "notebooks/",
+    "*.ipynb"
+]
