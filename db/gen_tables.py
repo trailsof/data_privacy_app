@@ -55,6 +55,7 @@ CREATE TABLE IF NOT EXISTS session_app (
 );
 """
 
+
 def create_tables():
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
@@ -67,6 +68,7 @@ def create_tables():
 
     conn.commit()
     conn.close()
+
 
 if __name__ == "__main__":
     create_tables()
