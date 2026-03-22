@@ -14,8 +14,11 @@ from pipelines.ingest_permissions import (
 @pytest.mark.integration
 def test_fetch_permissions_from_url():
     data = fetch_permissions_from_url(AOSP_PERMS_JSON_URL)
-    assert isinstance(data, dict) # check if output is a dict
-    assert sorted(data.keys()) == ["groups", "permissions"] # check for expected_row keys
+    assert isinstance(data, dict)  # check if output is a dict
+    assert sorted(data.keys()) == [
+        "groups",
+        "permissions",
+    ]  # check for expected_row keys
 
     # assert the exception is working
     with pytest.raises(RuntimeError):
@@ -38,21 +41,31 @@ def test_seed_permissions(tmp_path, mock_aosp_data):
             SELECT * FROM permission
         """)
         rows = cursor.fetchall()
-    
+
     assert len(rows) == 1
     row = rows[0]
-    assert isinstance(row[0], int) # id should be an int
-    assert row[1] == "Mock Permission"  # name ('android.permission.MOCK_PERMISSION' -> 'Mock Permission')
-    assert row[2] == "MOCK PERMISSION GROUP"    # category ('Mock permission group' -> 'MOCK PERMISSION GROUP')
-    assert row[3] == "Mock permission for testing"  # description (as is -> 'Mock permission group for testing')
-    assert row[4] == "Normal"   # severity ('signature' -> 'Normal')
-    assert row[5] == None # associated_risks (TODO: not populated with anything at the moment)
-    assert row[6] == "MOCK_PERMISSION"  # android_name ('android.permission.MOCK_PERMISSION' -> 'MOCK_PERMISSION')
+    assert isinstance(row[0], int)  # id should be an int
+    assert (
+        row[1] == "Mock Permission"
+    )  # name ('android.permission.MOCK_PERMISSION' -> 'Mock Permission')
+    assert (
+        row[2] == "MOCK PERMISSION GROUP"
+    )  # category ('Mock permission group' -> 'MOCK PERMISSION GROUP')
+    assert (
+        row[3] == "Mock permission for testing"
+    )  # description (as is -> 'Mock permission group for testing')
+    assert row[4] == "Normal"  # severity ('signature' -> 'Normal')
+    assert (
+        row[5] is None
+    )  # associated_risks (TODO: not populated with anything at the moment)
+    assert (
+        row[6] == "MOCK_PERMISSION"
+    )  # android_name ('android.permission.MOCK_PERMISSION' -> 'MOCK_PERMISSION')
 
 
 @pytest.mark.integration
 def test_override_permission_severity_update(tmp_path, mock_aosp_data, mock_override):
-    """ Updates permission severity if permission exists """
+    """Updates permission severity if permission exists"""
     # create a temporary permissions table
     TMP_DB_PATH = tmp_path / "test.db"
     with sqlite3.connect(TMP_DB_PATH) as conn:
@@ -66,5 +79,5 @@ def test_override_permission_severity_update(tmp_path, mock_aosp_data, mock_over
         cursor = conn.cursor()
         cursor.execute("""SELECT severity FROM permission""")
         row = cursor.fetchone()
-    
+
     assert row[0] == "High"
