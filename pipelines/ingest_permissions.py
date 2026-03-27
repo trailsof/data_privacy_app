@@ -1,20 +1,7 @@
 import sqlite3
 
 from utils import fetch_json_data_from_url
-
-
-# Google defined these permissions as "special". Though they don't fall under a
-# "dangerous" protection level, they should be considered high risk
-SPECIAL_PERMISSIONS = {
-    "SYSTEM_ALERT_WINDOW": "High",
-    "WRITE_SETTINGS": "High",
-}
-
-AOSP_PERMS_JSON_URL = (
-    "https://raw.githubusercontent.com/androguard/androguard/"
-    "refs/heads/master/androguard/core/api_specific_resources/"
-    "aosp_permissions/permissions_36.json"
-)
+from constants import SPECIAL_PERMISSIONS, AOSP_PERMS_JSON_URL
 
 
 def seed_permissions(

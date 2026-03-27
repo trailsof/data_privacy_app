@@ -2,9 +2,7 @@ import json
 import sqlite3
 
 from utils import fetch_json_data_from_url
-
-
-TRACKER_JSON_URL = "https://reports.exodus-privacy.eu.org/api/trackers"
+from constants import TRACKER_JSON_URL
 
 
 def seed_trackers(

@@ -5,55 +5,7 @@ import requests
 from bs4 import BeautifulSoup
 from google_play_scraper import app as gp_app
 
-APPS_TO_SCRAPE = {
-    "Social Media": [
-        "Instagram",
-        "TikTok",
-        "Snapchat",
-        "Facebook",
-        "X (Twitter)",
-        "Reddit",
-        "Threads",
-        "Pinterest",
-    ],
-    "Messaging": [
-        "WhatsApp Messenger",
-        "Messenger",
-        "Telegram",
-        "WhatsApp Business",
-        "Signal Private Messenger",
-    ],
-    "AI & Productivity": [
-        "ChatGPT",
-        "Google Gemini",
-        "Zoom Workplace",
-        "Microsoft Teams",
-    ],
-    "Entertainment": [
-        "Spotify",
-        "YouTube",
-        "Netflix",
-        "Tubi: Free Movies & Live TV",
-        "Disney+",
-    ],
-    "Shopping": ["Temu", "Amazon Shopping", "SHEIN", "Walmart", "eBay"],
-    "Dating": ["Tinder", "Bumble", "Hinge", "Badoo", "OkCupid", "Plenty of Fish"],
-    "Banking": [
-        "Chase Mobile",
-        "Bank of America Mobile Banking",
-        "Wells Fargo Mobile",
-        "Capital One Mobile",
-        "Citibank",
-    ],
-    "Health & Fitness": [
-        "MyFitnessPal",
-        "Headspace",
-        "Calm",
-        "Fitbit",
-        "Flo Period Tracker",
-        "Strava",
-    ],
-}
+from constants import APPS_TO_SCRAPE
 
 
 def get_connection(db_path: str = "data_privacy_app.db") -> sqlite3.Connection:
