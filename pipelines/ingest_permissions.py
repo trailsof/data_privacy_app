@@ -15,12 +15,55 @@ AOSP_PERMS_JSON_URL = (
     "aosp_permissions/permissions_36.json"
 )
 
+TRACKER_JSON_URL = "https://reports.exodus-privacy.eu.org/api/trackers"
+
+
 def fetch_json_data_from_url(url: str) -> dict:
     """ Fetch JSON data from a URL. """
     try:
         return requests.get(url).json()
     except Exception as e:
         raise RuntimeError(f"Error fetching permissions: {e}")
+
+def seed_trackers(
+    data: dict | None = None,
+    db_path: str = "data_privacy_app.db",
+) -> None:
+    """Populate tracker database with trackers identified by Exodus."""
+    if data is None:
+        data = fetch_json_data_from_url(TRACKER_JSON_URL)
+    
+    trackers = data.get("trackers", {})
+
+    with sqlite3.connect(db_path) as conn:
+        cursor = conn.cursor()
+
+        seed_count = 0
+        for id, info in trackers.items():
+            name = info.get("name", "")
+            category = info.get("categories", None)
+            description = info.get("description", None)
+            code_signature = info.get("code_signature", None)
+            network_signature = info.get("network_signature", None)
+            website = info.get("website", None)
+
+            # Upsert into tracker DB
+            cursor.execute(
+                """
+                INSERT OR IGNORE INTO tracker
+                (id, name, category, description, code_signature, network_signature, website)
+                VALUES (?, ?, ?, ?, ?)
+            """,
+                (id, name, category, description, code_signature, network_signature, website),
+            )
+
+            # Count successful insertion
+            if cursor.rowcount > 0:
+                seed_count += 1
+
+        conn.commit()
+
+    print(f"Done! Seeded {seed_count} master trackers.")
 
 def seed_permissions(
     data: dict | None = None,
