@@ -1,6 +1,7 @@
 import sqlite3
 
-import requests
+from utils import fetch_json_data_from_url
+
 
 # Google defined these permissions as "special". Though they don't fall under a
 # "dangerous" protection level, they should be considered high risk
@@ -17,13 +18,6 @@ AOSP_PERMS_JSON_URL = (
 
 TRACKER_JSON_URL = "https://reports.exodus-privacy.eu.org/api/trackers"
 
-
-def fetch_json_data_from_url(url: str) -> dict:
-    """Fetch JSON data from a URL."""
-    try:
-        return requests.get(url).json()
-    except Exception as e:
-        raise RuntimeError(f"Error fetching permissions: {e}")
 
 def seed_trackers(
     data: dict | None = None,
