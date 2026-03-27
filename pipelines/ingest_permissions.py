@@ -19,7 +19,7 @@ TRACKER_JSON_URL = "https://reports.exodus-privacy.eu.org/api/trackers"
 
 
 def fetch_json_data_from_url(url: str) -> dict:
-    """ Fetch JSON data from a URL. """
+    """Fetch JSON data from a URL."""
     try:
         return requests.get(url).json()
     except Exception as e:
@@ -70,7 +70,8 @@ def seed_permissions(
     db_path: str = "data_privacy_app.db",
 ) -> None:
     """
-    Populate permissions database with AOSP permissions.
+    Populate permissions database with AOSP permissions (API 36),
+    defined by androguard, and used by Exodus.
     """
     if data is None:
         data = fetch_json_data_from_url(AOSP_PERMS_JSON_URL)
@@ -127,9 +128,7 @@ def override_permission_severity(
     db_path: str = "data_privacy_app.db",
     overrides: dict = SPECIAL_PERMISSIONS,
 ) -> None:
-    """
-    Overrides existing permission's severity.
-    """
+    """Overrides existing permission's severity."""
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
 
