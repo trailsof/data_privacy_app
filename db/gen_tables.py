@@ -38,13 +38,13 @@ CREATE TABLE IF NOT EXISTS app_permission (
 """
 
 tracker_table = """
-CREATE TABLE IF NOT EXISTS tracker (
+CREATE TABLE tracker (
     id INTEGER PRIMARY KEY,
     name TEXT UNIQUE NOT NULL,
-    category TEXT
-    description TEXT
-    code_signature TEXT
-    network_signature TEXT
+    category TEXT,
+    description TEXT,
+    code_signature TEXT,
+    network_signature TEXT,
     website TEXT
 );
 """
@@ -84,6 +84,8 @@ def create_tables():
     cursor.execute(data_privacy_app_table)
     cursor.execute(permission_table)
     cursor.execute(app_permission_table)
+    cursor.execute(tracker_table)
+    cursor.execute(app_tracker_table)
     cursor.execute(session_table)
     cursor.execute(session_app_table)
 
