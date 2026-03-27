@@ -15,17 +15,12 @@ AOSP_PERMS_JSON_URL = (
     "aosp_permissions/permissions_36.json"
 )
 
-
-def fetch_permissions_from_url(url: str = AOSP_PERMS_JSON_URL) -> dict:
-    """
-    Fetch AOSP permissions from a URL. By default, fetch existing
-    AOSP permissions (API 36) defined by androguard (used by Exodus).
-    """
+def fetch_json_data_from_url(url: str) -> dict:
+    """ Fetch JSON data from a URL. """
     try:
         return requests.get(url).json()
     except Exception as e:
         raise RuntimeError(f"Error fetching permissions: {e}")
-
 
 def seed_permissions(
     data: dict | None = None,
@@ -35,7 +30,7 @@ def seed_permissions(
     Populate permissions database with AOSP permissions.
     """
     if data is None:
-        data = fetch_permissions_from_url()
+        data = fetch_json_data_from_url(AOSP_PERMS_JSON_URL)
 
     groups = data.get("groups", {})
     perms = data.get("permissions", {})
