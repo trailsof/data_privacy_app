@@ -12,7 +12,7 @@ def seed_trackers(
     """Populate tracker database with trackers identified by Exodus."""
     if data is None:
         data = fetch_json_data_from_url(TRACKER_JSON_URL)
-    
+
     trackers = data.get("trackers", {})
 
     with sqlite3.connect(db_path) as conn:
@@ -21,7 +21,9 @@ def seed_trackers(
         seed_count = 0
         for id, info in trackers.items():
             name = info.get("name", "")
-            category = json.dumps(info.get("categories", None)) # serialize list as json
+            category = json.dumps(
+                info.get("categories", None)
+            )  # serialize list as json
             description = info.get("description", None)
             code_signature = info.get("code_signature", None)
             network_signature = info.get("network_signature", None)
@@ -34,7 +36,15 @@ def seed_trackers(
                 (id, name, category, description, code_signature, network_signature, website)
                 VALUES (?, ?, ?, ?, ?, ?, ?)
             """,
-                (id, name, category, description, code_signature, network_signature, website),
+                (
+                    id,
+                    name,
+                    category,
+                    description,
+                    code_signature,
+                    network_signature,
+                    website,
+                ),
             )
 
             # Count successful insertion
