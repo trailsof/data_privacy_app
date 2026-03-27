@@ -5,7 +5,7 @@ import requests
 from bs4 import BeautifulSoup
 from google_play_scraper import app as gp_app
 
-apps_to_scrape = {
+APPS_TO_SCRAPE = {
     "Social Media": [
         "Instagram",
         "TikTok",
@@ -56,7 +56,8 @@ apps_to_scrape = {
 }
 
 
-def fetch_google_play_metadata(google_play_id):
+def fetch_google_play_metadata(google_play_id: str) -> dict | None:
+    """Use google_play_scraper to get an app's metadata."""
     try:
         data = gp_app(google_play_id)
 
@@ -75,7 +76,8 @@ def fetch_google_play_metadata(google_play_id):
         return None
 
 
-def resolve_google_play_id(app_name):
+def resolve_google_play_id(app_name: str) -> str | None:
+    """Use Google App Store's search engine to resolve name of app into its Google Play ID."""
     clean_name = re.sub(r"\(.*?\)", "", app_name).strip()
     search_url = f"https://play.google.com/store/search?q={clean_name}&c=apps"
 
@@ -112,7 +114,8 @@ def resolve_google_play_id(app_name):
     return None
 
 
-def upsert_app(conn, app_data):
+def upsert_app(conn: sqlite3.Connection, app_data: dict) -> None:
+    """Insert app into the app table, if it doesn't already exist."""
     cur = conn.cursor()
     # check if app already exists
     existing_app = cur.execute(
@@ -158,11 +161,13 @@ def upsert_app(conn, app_data):
     conn.commit()
 
 
-def get_connection(db_path="data_privacy_app.db"):
+def get_connection(db_path: str = "data_privacy_app.db") -> sqlite3.Connection:
+    """Intialize and return a SQLite connection to the DB."""
     return sqlite3.connect(db_path)
 
 
-def link_app_permissions(conn, google_play_id):
+def link_app_permissions(conn: sqlite3.Connection, google_play_id: str) -> None:
+    """Fetch permissions for app from Exodus web page and insert into database."""
     url = f"https://reports.exodus-privacy.eu.org/en/reports/{google_play_id}/latest/"
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36"
@@ -206,7 +211,8 @@ def link_app_permissions(conn, google_play_id):
     conn.commit()
 
 
-def process_and_link_app(conn, app_name):
+def process_and_link_app(conn: sqlite3.Connection, app_name: str) -> None:
+    """Insert an app's metadata and permissions into the database."""
     google_play_id = resolve_google_play_id(app_name)
 
     if google_play_id:
@@ -223,13 +229,16 @@ def process_and_link_app(conn, app_name):
         print(f"Could not resolve Google Play ID for {app_name}")
 
 
-def seed_apps():
+def seed_apps(apps: list[str] | None = None) -> None:
+    """Seed the database with metadata and permissions data for a list of apps."""
     conn = get_connection()
 
-    for category, apps in apps_to_scrape.items():
-        for app_name in apps:
-            print(f"Processing: {app_name} ({category})")
-            process_and_link_app(conn, app_name)
+    if apps is None:
+        apps = [app for app_list in APPS_TO_SCRAPE.values() for app in app_list]
+        
+    for app_name in apps:
+        print(f"Processing: {app_name}")
+        process_and_link_app(conn, app_name)
 
     conn.close()
     print("Done populating applications.")
