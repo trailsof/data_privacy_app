@@ -236,7 +236,6 @@ def link_app_permissions_and_trackers(
         return
 
     perms = set(re.findall(r'android\.permission\.([^"]+)"', page_text))
-    print(f"Found {len(perms)} permissions.")
     tracker_ids = set(
         int(id) for id in re.findall(r'href="/en/trackers/(\d+)/"', page_text)
     )
