@@ -5,7 +5,7 @@ import requests
 from bs4 import BeautifulSoup
 from google_play_scraper import app as gp_app
 
-from constants import APPS_TO_SCRAPE
+from pipelines.constants import APPS_TO_SCRAPE
 
 
 def get_connection(db_path: str = "data_privacy_app.db") -> sqlite3.Connection:
