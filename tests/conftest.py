@@ -1,5 +1,22 @@
 import pytest
 
+@pytest.fixture
+def mock_tracker_data():
+    return {
+        "trackers": {
+            "1": {
+                "categories": ["CategoryA"],
+                "code_signature": "com.mock.tracker",
+                "creation_date": "2026-01-01",
+                "description": "Mock tracker for testing",
+                "documentation": [],
+                "id": 11,
+                "name": "MockTracker1",
+                "network_signature": "mocktracker\\.com",
+                "website": "http://mocktracker.com",
+            },
+        },
+    }
 
 @pytest.fixture
 def mock_aosp_data():
