@@ -1,7 +1,7 @@
 import sqlite3
 
-from utils import fetch_json_data_from_url
-from constants import SPECIAL_PERMISSIONS, AOSP_PERMS_JSON_URL
+from pipelines.utils import fetch_json_data_from_url
+from pipelines.constants import SPECIAL_PERMISSIONS, AOSP_PERMS_JSON_URL
 
 
 def seed_permissions(

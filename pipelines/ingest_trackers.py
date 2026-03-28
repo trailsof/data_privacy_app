@@ -1,8 +1,8 @@
 import json
 import sqlite3
 
-from utils import fetch_json_data_from_url
-from constants import TRACKER_JSON_URL
+from pipelines.utils import fetch_json_data_from_url
+from pipelines.constants import TRACKER_JSON_URL
 
 
 def seed_trackers(
