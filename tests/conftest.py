@@ -11,7 +11,7 @@ def mock_tracker_data():
                 "creation_date": "2026-01-01",
                 "description": "Mock tracker for testing",
                 "documentation": [],
-                "id": 11,
+                "id": 1,
                 "name": "MockTracker1",
                 "network_signature": "mocktracker\\.com",
                 "website": "http://mocktracker.com",
