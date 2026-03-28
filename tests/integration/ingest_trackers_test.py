@@ -39,9 +39,9 @@ def test_seed_trackers(tmp_path, mock_tracker_data):
     assert len(rows) == 1
     row = rows[0]
     assert isinstance(row[0], int)  # id should be an int
-    assert row[1] == "MockTracker1"   # name
-    assert row[2] == '["CategoryA"]'    # category
-    assert row[3] == "Mock tracker for testing" # description
-    assert row[4] == "com.mock.tracker" # code_signature
-    assert row[5] == "mocktracker\\.com"    # network_signature
-    assert row[6] == "http://mocktracker.com"   # website
+    assert row[1] == "MockTracker1"  # name
+    assert row[2] == '["CategoryA"]'  # category
+    assert row[3] == "Mock tracker for testing"  # description
+    assert row[4] == "com.mock.tracker"  # code_signature
+    assert row[5] == "mocktracker\\.com"  # network_signature
+    assert row[6] == "http://mocktracker.com"  # website

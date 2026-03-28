@@ -1,5 +1,6 @@
 import pytest
 
+
 @pytest.fixture
 def mock_tracker_data():
     return {
@@ -17,6 +18,7 @@ def mock_tracker_data():
             },
         },
     }
+
 
 @pytest.fixture
 def mock_aosp_data():
