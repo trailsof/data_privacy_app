@@ -1,30 +1,7 @@
 import sqlite3
 
-import requests
-
-# Google defined these permissions as "special". Though they don't fall under a
-# "dangerous" protection level, they should be considered high risk
-SPECIAL_PERMISSIONS = {
-    "SYSTEM_ALERT_WINDOW": "High",
-    "WRITE_SETTINGS": "High",
-}
-
-AOSP_PERMS_JSON_URL = (
-    "https://raw.githubusercontent.com/androguard/androguard/"
-    "refs/heads/master/androguard/core/api_specific_resources/"
-    "aosp_permissions/permissions_36.json"
-)
-
-
-def fetch_permissions_from_url(url: str = AOSP_PERMS_JSON_URL) -> dict:
-    """
-    Fetch AOSP permissions from a URL. By default, fetch existing
-    AOSP permissions (API 36) defined by androguard (used by Exodus).
-    """
-    try:
-        return requests.get(url).json()
-    except Exception as e:
-        raise RuntimeError(f"Error fetching permissions: {e}")
+from pipelines.utils import fetch_json_data_from_url
+from pipelines.constants import SPECIAL_PERMISSIONS, AOSP_PERMS_JSON_URL
 
 
 def seed_permissions(
@@ -32,10 +9,11 @@ def seed_permissions(
     db_path: str = "data_privacy_app.db",
 ) -> None:
     """
-    Populate permissions database with AOSP permissions.
+    Populate permissions database with AOSP permissions (API 36),
+    defined by androguard, and used by Exodus.
     """
     if data is None:
-        data = fetch_permissions_from_url()
+        data = fetch_json_data_from_url(AOSP_PERMS_JSON_URL)
 
     groups = data.get("groups", {})
     perms = data.get("permissions", {})
@@ -89,9 +67,7 @@ def override_permission_severity(
     db_path: str = "data_privacy_app.db",
     overrides: dict = SPECIAL_PERMISSIONS,
 ) -> None:
-    """
-    Overrides existing permission's severity.
-    """
+    """Overrides existing permission's severity."""
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
 

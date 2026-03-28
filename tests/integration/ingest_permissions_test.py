@@ -3,9 +3,9 @@ import sqlite3
 import pytest
 
 from db.gen_tables import permission_table
+from pipelines.utils import fetch_json_data_from_url
+from pipelines.constants import AOSP_PERMS_JSON_URL
 from pipelines.ingest_permissions import (
-    AOSP_PERMS_JSON_URL,
-    fetch_permissions_from_url,
     seed_permissions,
     override_permission_severity,
 )
@@ -13,7 +13,7 @@ from pipelines.ingest_permissions import (
 
 @pytest.mark.integration
 def test_fetch_permissions_from_url():
-    data = fetch_permissions_from_url(AOSP_PERMS_JSON_URL)
+    data = fetch_json_data_from_url(AOSP_PERMS_JSON_URL)
     assert isinstance(data, dict)  # check if output is a dict
     assert sorted(data.keys()) == [
         "groups",
@@ -22,7 +22,7 @@ def test_fetch_permissions_from_url():
 
     # assert the exception is working
     with pytest.raises(RuntimeError):
-        fetch_permissions_from_url("http://invalid.url")
+        fetch_json_data_from_url("http://invalid.url")
 
 
 @pytest.mark.integration
