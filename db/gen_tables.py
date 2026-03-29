@@ -27,7 +27,6 @@ CREATE TABLE IF NOT EXISTS permission (
 );
 """
 
-
 app_permission_table = """
 CREATE TABLE IF NOT EXISTS app_permission (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -35,6 +34,28 @@ CREATE TABLE IF NOT EXISTS app_permission (
     permission_id INTEGER NOT NULL,
     FOREIGN KEY (app_id) REFERENCES app(id),
     FOREIGN KEY (permission_id) REFERENCES permission(id)
+);
+"""
+
+tracker_table = """
+CREATE TABLE tracker (
+    id INTEGER PRIMARY KEY,
+    name TEXT UNIQUE NOT NULL,
+    category TEXT,
+    description TEXT,
+    code_signature TEXT,
+    network_signature TEXT,
+    website TEXT
+);
+"""
+
+app_tracker_table = """
+CREATE TABLE IF NOT EXISTS app_tracker (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    app_id INTEGER NOT NULL,
+    tracker_id INTEGER NOT NULL,
+    FOREIGN KEY (app_id) REFERENCES app(id),
+    FOREIGN KEY (tracker_id) REFERENCES tracker(id)
 );
 """
 
@@ -63,6 +84,8 @@ def create_tables():
     cursor.execute(data_privacy_app_table)
     cursor.execute(permission_table)
     cursor.execute(app_permission_table)
+    cursor.execute(tracker_table)
+    cursor.execute(app_tracker_table)
     cursor.execute(session_table)
     cursor.execute(session_app_table)
 
