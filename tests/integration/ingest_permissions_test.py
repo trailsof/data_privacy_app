@@ -12,7 +12,7 @@ from pipelines.ingest_permissions import (
 
 
 @pytest.mark.integration
-def test_fetch_permissions_from_url():
+def test_fetch_permissions_from_invalid_url_fails():
     data = fetch_json_data_from_url(AOSP_PERMS_JSON_URL)
     assert isinstance(data, dict)  # check if output is a dict
     assert sorted(data.keys()) == [

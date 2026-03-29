@@ -9,7 +9,7 @@ from pipelines.ingest_trackers import seed_trackers
 
 
 @pytest.mark.integration
-def test_fetch_trackers_from_url():
+def test_fetch_trackers_from_invalid_url_fails():
     data = fetch_json_data_from_url(TRACKER_JSON_URL)
     assert isinstance(data, dict)  # check if output is a dict
     assert list(data.keys()) == ["trackers"]  # should only contain 1 key
